@@ -70,6 +70,9 @@ Control structures
 Short-forms
 -----------
 
+[I've discovered an undocumented ``$`` short-form!!  ``$0x04`` expands to
+``(calldataload 0x04)``.]
+
 
 
 .. index:: ! reference;parser;arithmetic

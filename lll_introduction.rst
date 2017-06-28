@@ -39,8 +39,7 @@ Authoritative Resources
 -----------------------
 
 The sole authoritative resource on LLL is the `compiler source code
-<https://https://github.com/ethereum/solidity/tree/develop/liblll>`_
-itself.
+<https://github.com/ethereum/solidity/tree/develop/liblll>`_ itself.
 
 (While this documentation aims to be accurate, there will certainly be
 errors and omissions.)
