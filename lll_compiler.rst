@@ -18,6 +18,8 @@ section?]
 Invoking the compiler
 =====================
 
+[And what to do with the output...]
+
 
 .. index:: ! compiler;options
 
@@ -27,7 +29,15 @@ Compiler Options
 The ``lllc`` compiler options are reasonably self-explanatory and are as
 follows.
 
-[Which options can be conbined, and which are exclusive?]
+When multiple options are used the following rules apply.
+
+ * ``-h`` and ``-V`` take precendence over all others, and the *first* one of
+   these listed is executed.
+
+ * ``-a``, ``-b``, ``-t``, ``-x``, ``-d`` are mutually exclusive output
+   formats. The *last* of these listed defines the output format created.
+
+ * ``-o`` can be used with any of the output formats.
 
 
 .. index:: ! compiler;options;help
@@ -66,20 +76,26 @@ This is the default.
    6003600201
 
 
-.. index:: ! compiler;options;binary
-
-``-b,--binary``
----------------
-
-Parse, compile and assemble; output byte code in binary.
-
-
 .. index:: ! compiler;options;assembly
 
 ``-a,--assembly``
 -----------------
 
 Only parse and compile; show assembly.
+
+Outputs the intermediate assembly language which is shared with Solidity and
+compiled into the final bytecode, possibly via the optimiser.
+
+::
+
+   > lllc -a erc20.lll
+     jumpi(tag_42, iszero(callvalue))
+      0x0
+     dup1
+     revert
+   tag_42:
+     sstore(caller, 0x186a0)
+     ...
 
 
 .. index:: ! compiler;options;parse
@@ -97,6 +113,30 @@ numbers are all converted to decimal and quoted strings standardised.
 
    > echo "(def 'foo (mload 0x0a)) ; define foo" | lllc -t
    ( def "foo" ( mload 10 ) )
+
+
+.. index:: ! compiler;options;disassemble
+
+``-d,--disassemble``
+--------------------
+
+The ``-d`` option is not documented in the ``--help`` output. It decompiles
+hexadecimal EVM code into readable opcodes.
+
+::
+
+   > echo 602a600055 | lllc -d
+   PUSH1 0x2A PUSH1 0x0 SSTORE
+
+
+.. index:: ! compiler;options;binary
+
+``-b,--binary``
+---------------
+
+Parse, compile and assemble; output byte code in binary.
+
+I haven't found a use for this yet.
 
 
 .. index:: ! compiler;options;optimise
