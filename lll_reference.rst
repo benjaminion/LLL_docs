@@ -22,6 +22,21 @@ Comments
 --------
 
 
+.. index:: ! reference;syntax;characters
+
+Allowed Characters
+------------------
+
+[NB string lengths; case-sensitivity]
+
+
+
+Common conventions
+------------------
+
+[E.g. use of lower case. What else?]
+
+
 .. index:: ! reference;evm
 
 EVM Opcodes
@@ -46,6 +61,8 @@ Macro expansion
 Control structures
 ------------------
 
+[Include "include" here or own section?]
+
 
 
 .. index:: ! reference;parser;shortform
@@ -67,6 +84,7 @@ Arithmetic Operators
 set, get, ref
 -------------
 
+[Comments on memory layout]
 
 
 .. index:: ! reference;parser;alloc

@@ -9,3 +9,4 @@ Documentation for the LLL compiler
    lll_reference.rst
    lll_compiler.rst
    lll_abi.rst
+   lll_design.rst
