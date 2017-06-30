@@ -1,5 +1,3 @@
-.. index:: ! abi
-
 ***************
 LLL and the ABI
 ***************
@@ -9,15 +7,13 @@ LLL and the ABI
 [Insert cross-ref to ABI doc]
 
 
-.. index:: ! abi;techniques
-
 Techniques
 ==========
 
 This section provides some patterns for handling common ABI implementations
 in LLL.
 
-.. index:: ! abi;techniques;types
+
 
 Types
 -----
@@ -25,7 +21,6 @@ Types
 [Almost all types are fundamentally bytes32.]
 
 
-.. index:: ! abi;techniques;strings
 
 Strings
 -------
@@ -33,8 +28,6 @@ Strings
 [Strings are trickier...]
 
 
-
-.. index:: ! abi;techniques;functions
 
 Functions
 ---------
@@ -44,7 +37,6 @@ Functions
 [Hints on generating the function signature.]
 
 
-.. index:: ! abi;techniques;events
 
 Events
 ------
@@ -54,7 +46,6 @@ Events
 [Explanation of the event signature and how to generate.]
 
 
-.. index:: ! abi;generating
 
 Generating the ABI
 ==================

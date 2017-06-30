@@ -1,10 +1,7 @@
-.. index:: ! compiler
-
 ************
 LLL Compiler
 ************
 
-.. index:: ! compiler;installing
 
 Installing the compiler
 =======================
@@ -12,8 +9,9 @@ Installing the compiler
 [Does this need to be covered? Link to DE's screencast? Move to resources
 section?]
 
+[Reference the Solidity "building from source" section]
 
-.. index:: ! compiler;invoking
+
 
 Invoking the compiler
 =====================
@@ -21,7 +19,6 @@ Invoking the compiler
 [And what to do with the output...]
 
 
-.. index:: ! compiler;options
 
 Compiler Options
 ================
@@ -40,7 +37,6 @@ When multiple options are used the following rules apply.
  * ``-o`` can be used with any of the output formats.
 
 
-.. index:: ! compiler;options;help
 
 ``-h,--help``
 -------------
@@ -58,7 +54,6 @@ Displays the following compiler options.
     -V,--version  Show the version and exit.
 
     
-.. index:: ! compiler;options;hex
 
 ``-x,--hex``
 ------------
@@ -76,7 +71,6 @@ This is the default.
    6003600201
 
 
-.. index:: ! compiler;options;assembly
 
 ``-a,--assembly``
 -----------------
@@ -84,7 +78,8 @@ This is the default.
 Only parse and compile; show assembly.
 
 Outputs the intermediate assembly language which is shared with Solidity and
-compiled into the final bytecode, possibly via the optimiser.
+compiled into the final bytecode. If the ``-o`` flag is used as well then the
+assembly language is displayed after optimisation.
 
 ::
 
@@ -98,7 +93,6 @@ compiled into the final bytecode, possibly via the optimiser.
      ...
 
 
-.. index:: ! compiler;options;parse
 
 ``-t,--parse-tree``
 -------------------
@@ -115,7 +109,6 @@ numbers are all converted to decimal and quoted strings standardised.
    ( def "foo" ( mload 10 ) )
 
 
-.. index:: ! compiler;options;disassemble
 
 ``-d,--disassemble``
 --------------------
@@ -129,7 +122,6 @@ hexadecimal EVM code into readable opcodes.
    PUSH1 0x2A PUSH1 0x0 SSTORE
 
 
-.. index:: ! compiler;options;binary
 
 ``-b,--binary``
 ---------------
@@ -139,7 +131,6 @@ Parse, compile and assemble; output byte code in binary.
 I haven't found a use for this yet.
 
 
-.. index:: ! compiler;options;optimise
 
 ``-o,--optimise``
 -----------------
@@ -159,8 +150,7 @@ but it doesn't always manage to spot all opportunities for this.
    600f
 
 
-.. index:: ! compiler;options;version
-   
+ 
 ``-V,--version``
 ----------------
 

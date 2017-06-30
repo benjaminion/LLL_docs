@@ -1,10 +1,7 @@
-.. index:: ! introduction
-
 ****************
 LLL Introduction
 ****************
 
-.. index:: ! introduction;background
 
 Background
 ========== 
@@ -25,15 +22,11 @@ efficient use of those limited resources.
 These pages aim to provide a reference resource for LLL contract development.
 
 
-.. index:: ! introduction;resources
-
 Resources
 =========
 
 The list of LLL-related resources currently available is quite short.
 
-
-.. index:: ! introduction;resources;authoritative
 
 Authoritative Resources
 -----------------------
@@ -44,8 +37,6 @@ The sole authoritative resource on LLL is the `compiler source code
 (While this documentation aims to be accurate, there will certainly be
 errors and omissions.)
 
-
-.. index:: ! introduction;resources;tutorial
 
 Tutorials
 ---------
@@ -61,8 +52,6 @@ on getting started with LLL.
    some of them.
 
 
-.. index:: ! introduction;resources;original
-
 Original Resources
 ------------------
 
@@ -72,8 +61,6 @@ is still available on GitHub and remains the starting point for this
 documentation set. However, that documentation was last updated in 2014,
 and some things have changed since then.
 
-
-.. index:: ! introduction;resources;examples
 
 Example Code
 ------------
