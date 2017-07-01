@@ -75,6 +75,36 @@ Control structures
 ``while``, ``until``
 ^^^^^^^^^^^^^^^^^^^^
 
+``(while TEST BODY)`` evaluates ``TEST`` and if the result is non-zero executes
+``BODY``, discarding the result. This is repeated while ``TEST`` remains
+non-zero.
+
+Let's say you are putting data into contract storage at consecutive locations
+starting at zero. The following will count how many items you have. (For fewer
+than a hundred or so items it's likely cheaper to re-count them than to store a
+count separately.)
+
+::
+
+  (seq
+    [0x00]:0
+    (while (sload @0x00) [0x00]:(+ 1 @0x00))
+    (return 0x00 0x20))
+
+``(until TEST BODY)`` is the same as ``while`` except that it evaluates
+``BODY`` when ``TEST`` is zero until it becomes non-zero.
+
+Return the number of leading zero bytes in the call data (up to 32 max):
+
+::
+
+  (seq
+    [0x20]:(calldataload 0x04)
+    (until
+      (or (= @0x00 32) (byte @0x00 @0x20))
+      [0x00]:(+ 1 @0x00))
+    (return 0x00 0x20))
+
 
 ``for``
 ^^^^^^^
@@ -96,8 +126,8 @@ The following code computes factorials: 10! = 3628800 = 0x375f00 in this case.
         )
       (return j 0x20))
 
-This is one of the few occasions where I think the compact notation is actually
-an improvement. The following compiles to the same bytecode.
+This is one of the rare occasions where I think the compact notation is
+actually an improvement. The following compiles to the same bytecode.
       
 ::
 
@@ -109,7 +139,6 @@ an improvement. The following compiles to the same bytecode.
         [j]:(* @j @i))            ; BODY
       (return j 0x20)))
 
-      
       
 ``lll``
 ^^^^^^^
