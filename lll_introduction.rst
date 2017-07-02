@@ -6,6 +6,10 @@ LLL Introduction
 Background
 ========== 
 
+LLL is one of the original Ethereum smart contract programming languages and
+provides a different perspective and programming discipline when compared to
+the ubiquitous Solidity language.
+
 According to the Ethereum `Homestead Documentation
 <http://www.ethdocs.org/en/latest/contracts-and-transactions/contracts.html#id4>`_,
 
@@ -13,12 +17,12 @@ According to the Ethereum `Homestead Documentation
     meant to be very simple and minimalistic; essentially just a tiny wrapper
     over coding in EVM directly.
 
-LLL is one of the original Ethereum smart contract programming languages and
-provides a different perspective and programming discipline when compared to
-the ubiquitous Solidity language. In particular, LLL is very effective at
-exposing the highly resource-constrained nature of the EVM and enables
-efficient use of those limited resources.
-    
+In particular, LLL doesn't hide from you the highly resource-constrained nature
+of the EVM and enables efficient use of those limited resources.  LLL
+facilitates the creation of very clean EVM code whilst removing the worst of
+the pain of coding for the EVM directly: namely stack management and jump
+management.
+
 These pages aim to provide a reference resource for LLL contract development.
 
 
@@ -80,8 +84,9 @@ Example Code
  * Once again, Daniel Ellison has some `code examples
    <https://github.com/zigguratt>`_ and demonstrations of useful techniques.
 
-**Warning** some of the following examples may use features now removed and may
-not even compile any longer.
+**Warning** some of the following examples are now inaccurate and may use
+features that have changed or been removed. Some examples may no longer
+compile.
 
  * The original `LLL Examples for PoC 5
    <https://github.com/ethereum/cpp-ethereum/wiki/LLL-Examples-for-PoC-5/04fae9e627ac84d771faddcf60098ad09230ab58>`_.
