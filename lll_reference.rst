@@ -17,7 +17,9 @@ syntax."
 
 An LLL expression is any of the following.
 
- - An integer, optionally prefixed with "0x" for hex base: ``42`` or ``0x2a``.
+ - An integer, optionally prefixed with "0x" for hex base: ``42`` or
+   ``0x2a``. Negative numbers cannot be directly represented (do ``(sub 0
+   N)``).
 
  - A string (see below).
    
@@ -43,11 +45,8 @@ Strings
 
 A string in LLL is represented internally as a single 32 byte word, with the
 string left-alighed to the high-order byte in the (big endian) word. Any
-characters beyond the 32nd are ignored by the compiler.
-
-Characters in strings are interpreted as UTF8 on compilation (on Linux, at
-least), and basically any character is permissible, with slight variation
-depending on which of the two string representations is used.
+characters beyond the 32nd are ignored by the compiler.  Permissible characters
+in strings vary according to which representation is used.
 
 There are two ways to represent strings in LLL:
 
@@ -56,12 +55,32 @@ There are two ways to represent strings in LLL:
     within the string. With that sole exception, all characters are OK
     including whitespace and newlines.
 
- 2. As a string with a single quote at the beginning: ``'forty-two``.  The
-    string may not include any whitespace characters, but both single and
-    double quotes are OK.  ``'forty-two`` is identical to ``"forty-two"`` as far
-    as the parser is concerned.
+ 2. With a single quote at the beginning: ``'forty-two``.  The string may not
+    include any whitespace characters, or the characters used in compact
+    notation, parentheses or comments (``{``, ``}``, ``[``, ``]``, ``@``,
+    ``$``, ``(``, ``)``, ``:``, ``;``). However, both single and double quotes
+    *are* allowed.  ``'forty-two`` is identical to ``"forty-two"`` as far as
+    the parser is concerned.
 
+The following are all valid strings, also shown with their internal hexadecimal
+representations::
 
+  "Hello, world!"
+  0x48656c6c6f2c20776f726c642100000000000000000000000000000000000000
+
+  "$£¥€ - {}[]@():;"
+  0x24c2a3c2a5e282ac202d207b7d5b5d4028293a3b000000000000000000000000
+
+  'forty-two
+  0x666f7274792d74776f0000000000000000000000000000000000000000000000
+
+  '"forty-two"
+  0x22666f7274792d74776f22000000000000000000000000000000000000000000
+
+  'こんにちは世界
+  0xe38193e38293e381abe381a1e381afe4b896e7958c0000000000000000000000
+
+  
 Comments
 --------
 
@@ -70,11 +89,46 @@ In common with Lisp, varying numbers of semicolons may be used to begin a
 comment depending on context, but this is purely stylistic.
 
 
+Compact notation
+----------------
+
+A compact form is available for certain expressions, particularly memory
+accesses. Used wisely it can enhance the readability of the code. Using the
+compact forms does not affect the code generated; the parser simply makes the
+substitutions below. Note that in all cases any whitespace is optional.
+
+``{ ... }``
+  ``(seq ...)`` - evaluates a sequence of expressions in order.
+
+``@ EXPR``
+  ``(mload EXPR)`` - loads the value of memory location EXPR.
+
+``@@ EXPR``
+  ``(sload EXPR)`` - loads the value of storage location EXPR.
+
+``[ EXPR1 ] EXPR2``
+  ``(mstore EXPR1 EXPR2)`` - writes the value of EXPR2 into memory location
+  EXPR1.  A colon, ``:``, may optionally be added after the colsing bracket if
+  desired for readability.
+
+``[[ EXPR1 ]] EXPR2``
+  ``(sstore EXPR1 EXPR2)`` - writes the value of EXPR2 into storage location
+  EXPR1.  A colon, ``:``, may optionally be added after the colsing bracket if 
+  desired for readability.
+
+``$ EXPR``
+  ``(calldataload EXPR)`` - reads a word of call data starting from byte EXPR.
+
+
 Common conventions
 ------------------
 
-[E.g. use of lower case. What else?]
-[NB case sensitivity... conversion of opcodes to upper case...]
+LLL code is generally written with everything in lower case, except in `asm`
+expressions where the EVM opcodes tend to be uppercased. Internally all
+expressions are converted to uppercase, except for literals/strings.
+
+Literals, such as definition names created by ``def`` expressions, are case
+sensitive, so ``(def 'x 42)`` and ``(def 'X 42)`` define two distinct macros.
 
 
 EVM Opcodes
@@ -96,9 +150,29 @@ Macro expansion - ``def``
 -------------------------
 
 
+Macro names
+^^^^^^^^^^^
+
+Although the ``def`` expression allows a wide latitude in assigning macro
+names, some restrictions apply if the macro name is to be usable. Essentially,
+the same rules apply as for single quoted strings, except that,
+
+ * there is no upper bound on length,
+ * a double quote mark may not be used in the name (single quote is OK), and
+ * the name may not begin with a numeral.
+
+All of the following correctly evaluate to 100, but are perhaps ill-advised::
+
+  {(def '£ 100) £}
+  {(def 'a' 100) a'}
+  {(def 'a (sub 0 100)) (def '-a (sub 0 a)) -a}
+  {(def 'thismacronameislongerthan32characters 100) thismacronameislongerthan32characters}
+
 
 Including files - ``include``
 -----------------------------
+
+
 
 
 
@@ -246,14 +320,6 @@ Literals - ``lit``
 
 Code - ``lll``
 --------------
-
-
-Compact notation
-----------------
-
-[I've discovered an undocumented ``$`` short-form!!  ``$0x04`` expands to
-``(calldataload 0x04)``.]
-
 
 
 Variables - ``set``, ``get``, ``ref``
