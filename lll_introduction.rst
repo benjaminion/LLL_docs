@@ -2,6 +2,10 @@
 LLL Introduction
 ****************
 
+.. note::
+    This documentation is a work in progress, so please exercise appropriate
+    caution!
+
 
 Background
 ========== 
@@ -63,7 +67,7 @@ The `original LLL documentation
 <https://github.com/ethereum/cpp-ethereum/wiki/LLL-PoC-6/04fae9e627ac84d771faddcf60098ad09230ab58>`_
 is still available on GitHub and remains the starting point for this
 documentation set. However, that documentation was last updated in 2014,
-and some things have changed since then.
+and significant things have changed since then.
 
 
 Example Code

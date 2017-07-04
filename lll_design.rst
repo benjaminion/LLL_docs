@@ -2,8 +2,11 @@
 Common Design Patterns
 **********************
 
-[Some overlap here with the ABI section, but no harm.]
+.. note::
+    This documentation is a work in progress, so please exercise appropriate
+    caution!
 
+[Some overlap here with the ABI section, but no harm.]
 
 
 Memory Layout

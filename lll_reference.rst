@@ -2,6 +2,10 @@
 Language Reference
 ******************
 
+.. note::
+    This documentation is a work in progress, so please exercise appropriate
+    caution!
+
 LLL Syntax
 ==========
 
@@ -326,6 +330,8 @@ is fine and returns whatever the code in *foo.lll* evaluated to: ``(return
 
 More often, ``include`` might be used to insert external libraries of common
 macro definitions shared between projects.
+
+[Insert discussion of allowable file paths]
 
 
 Control structures

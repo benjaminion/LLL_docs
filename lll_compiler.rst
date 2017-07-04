@@ -2,6 +2,9 @@
 LLL Compiler
 ************
 
+.. note::
+    This documentation is a work in progress, so please exercise appropriate
+    caution!
 
 Installing the compiler
 =======================
