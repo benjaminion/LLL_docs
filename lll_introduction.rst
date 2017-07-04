@@ -84,9 +84,8 @@ Example Code
  * Once again, Daniel Ellison has some `code examples
    <https://github.com/zigguratt>`_ and demonstrations of useful techniques.
 
-**Warning** some of the following examples are now inaccurate and may use
-features that have changed or been removed. Some examples may no longer
-compile.
+**Warning** some of the following examples may use features that have changed
+or been removed. Some examples may no longer compile.
 
  * The original `LLL Examples for PoC 5
    <https://github.com/ethereum/cpp-ethereum/wiki/LLL-Examples-for-PoC-5/04fae9e627ac84d771faddcf60098ad09230ab58>`_.
