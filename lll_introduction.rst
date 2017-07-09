@@ -4,7 +4,13 @@ LLL Introduction
 
 .. note::
     This documentation is a work in progress, so please exercise appropriate
-    caution!
+    caution.  It a personal effort and has no formal connection with the
+    Ethereum Foundation.
+
+.. note::
+    Everything in these docs pertains to the `Solidity/LLL
+    <https://github.com/ethereum/solidity/>`_ implementation, specifically the
+    *develop* branch.
 
 
 Background
@@ -28,6 +34,12 @@ the pain of coding for the EVM directly: namely stack management and jump
 management.
 
 These pages aim to provide a reference resource for LLL contract development.
+
+While these pages are based on the `Solidity/LLL
+<https://github.com/ethereum/solidity/>`_ implementation, there is also a
+`Viper/LLL
+<https://github.com/ethereum/viper/blob/master/viper/compile_lll.py>`_
+implementation. Some of the info here may carry across; some may not.
 
 
 Resources
@@ -55,7 +67,7 @@ on getting started with LLL.
  * A seven part series of articles entitled `The Resurrection of LLL
    <http://blog.syrinx.net/the-resurrection-of-lll-part-1/>`_.
 
- * A series of articles on the `Consensys media pages
+ * An ongoing series of articles on the `Consensys media pages
    <https://media.consensys.net/@zigguratt>`_ with links to screencasts for
    some of them.
 

@@ -4,7 +4,8 @@ LLL and the ABI
 
 .. note::
     This documentation is a work in progress, so please exercise appropriate
-    caution!
+    caution.  It a personal effort and has no formal connection with the
+    Ethereum Foundation.
 
 [Insert rationale for following the Solidity ABI standard]
 
