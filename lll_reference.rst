@@ -344,10 +344,14 @@ grateful.
     created (again, treated in the same order).
 
 Whatever else this means, it does mean that macros cannot be defined
-recursively, so the following does not compile::
+recursively, so the following does not compile. (Actually, the compiler just
+chases its tail trying to recursively expand the macro until it eventually
+coredumps.) ::
 
-  (def 'fac (n) (when (> n 1) (* n fac((- n 1)))))
-
+  (seq
+    (def 'fac (n) (when (> n 1) (* n (fac (- n 1)))))
+    (fac 5))
+  
 This is probably just as well, as the resulting code could be unexpected. It is
 important to remember that *macros are not functions*. Macros get fully
 expanded in place at each invocation. If you have 10 invocations in different
@@ -419,9 +423,24 @@ evaluates to the result of the first non-void expression (i.e. the first
 expression that leaves anything on the stack - this can be manipulated with
 ``pop``), or void if there is none.
 
-``(raw (pop 1) 2 (pop 3))`` evaluates to 2.
+For example, ``(raw (pop 1) 2 (pop 3))`` evaluates to 2.
 
+We can use ``raw`` to avoid assigning a temporary variable when implementing
+Euclid's GCD algorithm::
 
+  ;; Evaluates to GCD(a,b)
+  (seq
+    (set 'a 1071)
+    (set 'b 462)
+    (while @b
+      [a]:(raw @b [b]:(mod @a @b)))
+    @a)
+
+Normally the ``while`` body would need explicit temporary storage: ``{[0x00]:@b
+[b]:(mod @a @b) [a]:@0x00})``. ``raw``'s properties allow us to avoid this, as
+above. It saves 36 gas in this example! (Much more with bigger problems.)
+
+    
 ``if``
 ^^^^^^
 
@@ -473,19 +492,19 @@ count separately.) ::
   (seq
     [0x00]:0
     (while (sload @0x00) [0x00]:(+ 1 @0x00))
-    (return 0x00 0x20))
+    @0)
 
 ``(until PRED BODY)`` is the same as ``while`` except that it evaluates
 ``BODY`` when ``PRED`` is zero until and continues until it becomes non-zero.
 
-Return the number of leading zero bytes in the call data (up to 32 max)::
+Evaluates to the number of leading zero bytes in the call data (up to 32 max)::
 
   (seq
     [0x20]:(calldataload 0x04)
     (until
       (or (= @0x00 32) (byte @0x00 @0x20))
       [0x00]:(+ 1 @0x00))
-    (return 0x00 0x20))
+    @0x00)
 
 
 ``for``
@@ -500,12 +519,11 @@ case. ::
    
     (seq
       (for
-        (seq (set 'i 1) (set 'j 1))      ; INIT
-        (<= (get 'i) 10)                 ; PRED
-        (mstore i (+ (get 'i) 1))        ; POST
-        (mstore j (* (get 'j) (get 'i))) ; BODY
-        )
-      (return j 0x20))
+        (seq (set 'i 1) (set 'j 1))       ; INIT
+        (<= (get 'i) 10)                  ; PRED
+        (mstore i (+ (get 'i) 1))         ; POST
+        (mstore j (* (get 'j) (get 'i)))) ; BODY
+      (get 'j))
 
 This is one of the rare occasions where I think the compact notation is
 actually an improvement. The following compiles to the same bytecode. ::
@@ -516,7 +534,7 @@ actually an improvement. The following compiles to the same bytecode. ::
         (<= @i 10)                ; PRED
         [i]:(+ @i 1)              ; POST
         [j]:(* @j @i))            ; BODY
-      (return j 0x20)))
+      @j)
 
       
 Logical Operators ``&&``, ``||``, ``!``
@@ -578,8 +596,8 @@ does not conflict with memory you may assign by other means.
 
 For each variable created using a ``set`` or ``with`` expression, 32 bytes of
 memory are assigned, starting from memory location 0x80 = 128. So, for example,
-in ``{(set 'x 1) (set 'y 2) (set 'z 3)}``, ``x`` is at ``0x80``, ``y`` is at
-``0xa0`` and ``z`` is at ``0xc0``.  Note that when a variable is ``unset``, or
+in ``{(set 'x 1) (set 'y 2) (set 'z 3)}``, ``x`` is at 0x80, ``y`` is at
+0xa0 and ``z`` is at 0xc0.  Note that when a variable is ``unset``, or
 goes out of the ``with`` scope, the memory space is *not reclaimed or
 reassigned*.  Thus, the following will use sixty-four bytes of memory: ``{(set
 'foo 1) (unset 'foo) (set 'foo 2)}``.
@@ -680,10 +698,10 @@ result in terms of items deposited on the stack.  Usage is::
 
   (asm ATOM1 ATOM2 ...)
 
-Where the ``ATOM``s may be either valid, non-`PUSH`` VM instructions or
+Where the ``ATOM``\ s may be either valid, non-``PUSH`` VM instructions or
 literals (in which case they will result in an appropriate ``PUSH``
-instruction). The EVM assembler language is defined in the ``Yellow Paper
-<http://gavwood.com/Paper.pdf>_``.
+instruction). The EVM assembler language is defined in the `Yellow Paper
+<http://gavwood.com/Paper.pdf>`_.
 
 For example, ``(asm 69 42 ADD)`` evaluates to the value 111. Note any assembler
 fragment that results in fewer than zero items being deposited on the stack or
@@ -818,7 +836,7 @@ Contract creation
 
 Note that in the above macros, memory location 0x00 is first written to in
 order to "reserve" it. This avoids an edge case where ``msize`` is initially
-zero and data gets overwritten by the lll operation.
+zero and data gets overwritten by the ``lll`` operation.
 
 Keccak256/SHA3 functions
 ------------------------
