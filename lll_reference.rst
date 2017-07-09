@@ -139,6 +139,9 @@ A comment begins with a semicolon, ``;``, and finishes at the end of the line.
 In common with Lisp, varying numbers of semicolons may be used to begin a
 comment depending on context, but this is purely stylistic.
 
+The only exception is when the ``;`` character is within a double-quoted
+string, in which case it is treated as part of the string and does not begin a
+comment.
 
 Common conventions
 ------------------
@@ -499,7 +502,7 @@ count separately.) ::
   (seq
     [0x00]:0
     (while (sload @0x00) [0x00]:(+ 1 @0x00))
-    @0)
+    @0x00)
 
 ``(until PRED BODY)`` is the same as ``while`` except that it evaluates
 ``BODY`` when ``PRED`` is zero until and continues until it becomes non-zero.
@@ -681,10 +684,13 @@ The following evaluates to 5::
 Memory allocation - ``alloc``
 -----------------------------
 
-[Exact behaviour still TBD - see `PR #2489 <https://github.com/ethereum/solidity/pull/2489>`_]
+[Exact behaviour still TBD - see `PR #2545
+<https://github.com/ethereum/solidity/pull/2545>`_]
 
-``(alloc SIZE)`` reserves ``SIZE`` bytes of memory starting from the current
-top of memory. It returns the start of the memory space allocated.
+``(alloc SIZE)`` provides ``SIZE`` contiguous bytes of memory starting from the
+current top of memory.  It returns the start of the memory space allocated.
+This is memory that has not been previously written to (or read from), and is
+all initialised to zero.
 
 Since memory is allocated in multiples of 32 bytes, the actual amount allocated
 is rounded up to the next 32 byte boundary::
@@ -693,6 +699,13 @@ is rounded up to the next 32 byte boundary::
   (alloc 1)  ;; Allocates 32 bytes, returns the original (msize)
   (alloc 32) ;; Allocates 32 bytes, returns the original (msize)
 
+It isn't necessary at all to use ``alloc`` to reserve memory; the LLL
+programmer has complete control over how memory is laid out and used.  However,
+``alloc`` could be useful for macros that need to find some unused space in
+which to write return data, for example.
+
+Note that the gas cost of memory is proportional to the number of bytes used up
+to 724 bytes, and increases super-linearly above that.
 
 Assembler - ``asm``
 -------------------
