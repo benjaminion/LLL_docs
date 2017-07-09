@@ -12,7 +12,7 @@ Documentation for the LLL compiler
     *develop* branch.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
    lll_introduction.rst
