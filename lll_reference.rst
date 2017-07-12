@@ -95,9 +95,11 @@ Strings
 -------
 
 A string in LLL is represented internally as a single 32 byte word, with the
-string left-aligned to the high-order byte in the (big-endian) word. Any
-characters beyond the 32nd are ignored by the compiler.  Permissible characters
-in strings vary according to which representation is used.
+string left-aligned to the high-order byte in the (big-endian) word. Any bytes
+beyond the 32nd are ignored by the compiler.  Note that a character may be
+represented by more than one byte since text is UTF-8 encoded by the compiler.
+Permissible characters in strings vary according to which of the
+representations is used.
 
 There are two ways to represent strings in LLL:
 
@@ -558,7 +560,8 @@ the arguments from left to right and perform `short circuit evaluation
 of arguments stops as soon as the outcome is known. I.e. ``(&& EXPR1 EXPR2
 ...)`` will stop evaluating after encountering an expression that evaluates to
 zero; ``(|| EXPR1 EXPR2 ...)`` will stop evaluating after encountering an
-expression that evaluates to non-zero.
+expression that evaluates to non-zero.  The final value of the expression is
+the value of the last sub-expression evaluated.
 
 ``!`` is a unary logical not operator, thus it takes one argument. ``(! EXPR)``
 evaluates to zero when ``EXPR`` evaluates to non-zero, and to one when ``EXPR``
