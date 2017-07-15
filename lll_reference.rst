@@ -562,8 +562,12 @@ the arguments from left to right and perform `short circuit evaluation
 of arguments stops as soon as the outcome is known. I.e. ``(&& EXPR1 EXPR2
 ...)`` will stop evaluating after encountering an expression that evaluates to
 zero; ``(|| EXPR1 EXPR2 ...)`` will stop evaluating after encountering an
-expression that evaluates to non-zero.  The final value of the expression is
-the value of the last sub-expression evaluated.
+expression that evaluates to non-zero.
+
+The final value of the expression is the value of the last sub-expression if it
+is evaluated, otherwise 1 for ``||`` and 0 for ``&&``.  Thus, ``(|| 123 456)``
+evaluates to 1 (due to the short-circuit), and ``(&& 123 456)`` evaluates
+to 456.
 
 ``!`` is a unary logical not operator, thus it takes one argument. ``(! EXPR)``
 evaluates to zero when ``EXPR`` evaluates to non-zero, and to one when ``EXPR``
