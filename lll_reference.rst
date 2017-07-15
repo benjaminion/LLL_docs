@@ -405,10 +405,12 @@ single quoted string: ``(include 'filename.lll)``.
 
 ``include`` can appear anywhere an expression would be valid. For example, this
 is fine and returns whatever the code in *foo.lll* evaluated to: ``(return
-(include "foo.lll"))``.
+(include "foo.lll"))``. Note that the contents of the included file must
+evaluate to a single expression even if it is being included within a ``seq``
+expression.
 
-More often, ``include`` might be used to insert external libraries of common
-macro definitions shared between projects.
+``include`` may be used to insert external libraries of common macro
+definitions shared between projects.
 
 Filepaths may be absolute or relative to the current directory. A filename on
 its own is looked for in the current directory.
