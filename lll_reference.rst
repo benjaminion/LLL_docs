@@ -360,6 +360,7 @@ recursively, so the following does not compile. (Actually, the compiler just
 chases its tail trying to recursively expand the macro until it eventually
 coredumps.) ::
 
+  ;; This will not compile
   (seq
     (def 'fac (n) (when (> n 1) (* n (fac (- n 1)))))
     (fac 5))
@@ -368,6 +369,40 @@ This is probably just as well, as the resulting code could be unexpected. It is
 important to remember that *macros are not functions*. Macros get fully
 expanded in place at each invocation. If you have 10 invocations in different
 places, the same code will be duplicated ten times.
+
+
+Macro arguments
+^^^^^^^^^^^^^^^
+
+Evaluation of macro arguments is done *after* they have been substituted.  This
+can be very significant if the arguments are complex expressions.  It can lead
+to surprise explosions in gas usage, and potentially to unexpected side-effects
+from evaluating the same expressions multiple times.
+
+Consider the following::
+
+  (seq
+    (def 'round (a b) (* (/ a b) b))
+    (round 35 (exp 2 5)))
+
+This looks innocent enough.  However, since the parameter ``b`` appears twice
+in the macro body, the ``exp`` expression will be evaluated twice.  If the
+parameter expressions are more complex, this can quickly become expensive.
+
+One way to deal with this is for the macro to store its arguments in memory
+temporarily if they appear more than once in the body::
+
+  (seq
+    (def 'round (a b) (seq [0]:b (* (/ a @b) @b)))
+    (round 35 (exp 2 5)))
+
+As for side-effects, the following evaluates to 6 rather than 3 (which is what
+you would expect were expressions evaluated before substitution)::
+  
+  (seq
+    (def 'inc (m) {[m]:(+ @m 1) @m})
+    (def 'thrice (a) (+ a a a))
+    (return (thrice (inc 0))))
 
 
 Macro example
