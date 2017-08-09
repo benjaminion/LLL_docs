@@ -23,7 +23,7 @@ ecosystem expect to find the ABI implemented.
 What follows is an introduction to interacting with the ABI in LLL. It doesn't
 aim to be at all comprehensive and the `ABI Specification
 <https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI>`_ remains the
-authoritative sourec of information.
+authoritative source of information.
 
 
 ABI Data format overview
@@ -42,7 +42,7 @@ There are two types of data defined in the ABI and handled differently:
      ``uint256[]``, ``bool[]``.  These are represented by a 32-byte pointer to
      where the actual data is stored along with its size.
 
-In addition, when calling a function within a contract the four-byte
+In addition, only when calling a function within a contract, the four-byte
 "signature" of that function is prepended to the call data.
 
 A complete set of call data to a contract has a structure like this::
@@ -151,7 +151,7 @@ Dynamic Types
 -------------
 
 Data that is variable in length and could exceed the bounds of a 32-byte word
-are treated as dynamic types.
+is treated as a dynamic type.
 
 Within the argument list part of the data, a dynamic type is represented by a
 32 byte pointer to where the actual data is stored, which will be after the end
@@ -163,7 +163,7 @@ a uint256. Immediately after the length comes the data.
 
 The data occupies as much space as required by the length, rounded up to a
 multiple of 32 bytes/whole words.  For ``string`` and ``bytes`` types, the data
-occupies one byte per unit of length specified.  Simple one dimensional arrays
+occupies one byte per unit of length specified.  Simple one-dimensional arrays
 occupy one 32 byte word per element.
 
 The ABI Specification has a `good example
@@ -174,7 +174,7 @@ Passing data
 ============
 
 There are essentially four situations where we are passing data around in this
-format, if we include the Event non-indexed data.  In each case the data are in
+format, if we include Event non-indexed data.  In each case the data are in
 the same format as above, but are passed by different mechanisms.
 
 
@@ -199,7 +199,7 @@ and you can continue parsing and processing the data from there.
 Passing data to a function
 --------------------------
 
-When calling a function in a contract all the necessary information is
+When calling a function in a contract, all the necessary information is
 contained in the "call data" that forms part of the transaction.  You can check
 the length of the call data with ``(calldatasize)`` - this evaluates to the
 number of bytes of call data available.  Reading beyond the end of the call
@@ -229,12 +229,12 @@ See the [TODO] design patterns page for guidelines on implementing functions.
 Returning data from a function
 ------------------------------
 
-Returning data from a function follows exactly the same format of putting data
-(whether elementary or dynamic) into 32-byte blocks, but omits any function
-selector.
+Returning data from a function follows exactly the same format of composing the
+data (whether elementary or dynamic) into 32-byte blocks, but omits any
+function selector.
 
-Once the data to be return is marshalled into contiguous memory, it is returned
-as follows::
+Once the data has been marshalled into contiguous memory, it is returned as
+follows::
 
   (return start length)
 
@@ -247,13 +247,13 @@ Events
 ------
 
 Another way to expose internal data to the outside world is via what the ABI
-(and Solidity) calls "Events".  These are just calls to the EVM ``LOGn``
+(and Solidity) calls "Events".  These are just executions of the EVM ``LOGn``
 opcodes.
+
+EVM log entries and Events as specified by the ABI relate to each as follows.
 
 EVM Log Entry
 ^^^^^^^^^^^^^
-
-EVM log entries and Events as specified by the ABI relate to each as follows.
 
 An EVM log entry comprises,
 
@@ -265,8 +265,9 @@ An EVM log entry comprises,
 In addition, the EVM provides the address of the contract emitting the event.
 
 In terms of LLL, the following generates a three-topic log entry with 32 bytes
-of ``data`` (read from memory starting at 0x00), the ``event-id`` as above for
-``topic[0]``, and two addresses as as ``topic[1]`` and ``topic[2]``::
+of ``data`` (read from memory starting at 0x00), ``topic[0]`` is the
+``event-id`` as described below, and ``topic[1]`` and ``topic[2]`` are each an
+address::
 
    (log3 0x00 32 event-id addr1 addr2)
 
@@ -351,14 +352,17 @@ do as follows::
 
   > web3.utils.sha3("name()")
   '0x06fdde0383f15d582d1a74511486c9ddf862a882fb7904b3d9fe9b8b8e58a796'
+
   > web3.utils.sha3("transferFrom(address,address,uint256)")
   '0x23b872dd7302113369cda2901243429419bec145408fa8b352b3dd92b66c680b'
+
+See also Remix in the next section.
 
 
 Generating the JSON ABI
 -----------------------
 
-To share your contract's interface with others, an JSON format for the
+To share your contract's interface with others, a JSON format for the
 contract's ABI is defined.
 
 One way to generate the ABI for your contract relatively painlessly is to feed
@@ -370,11 +374,14 @@ On the Linux command line, as follows::
   Contract JSON ABI 
   [{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"","type":"address"},{"indexed":false,"name":"","type":"address"},{"indexed":false,"name":"","type":"uint256"}],"name":"Transfer","type":"event"}]
 
-The constructor ABI should also be included if relevant.
+The constructor ABI should also be included if relevant. Of course it's easier
+if you read from and write to files in practice.
 
 You can also use the online `Remix IDE
 <https://ethereum.github.io/browser-solidity/>`_ to do this. Click on "Contract
-details (bytecode, interface etc.)" to see the Interface ABI generated.
+details (bytecode, interface etc.)" to see the Interface ABI generated.  Remix
+will also tell you the function selector hashes, so you can do it all in one
+place.
 
 Note that "constant" functions are those that don't change the blockchain
 state: i.e. they don't transfer value, change anything in storage or emit any
@@ -389,13 +396,14 @@ Once you have the JSON ABI descriptor for your contract then you can interact
 with it using standard tools such as
 `web3.js <https://www.npmjs.com/package/web3>`_
 (`documentation <http://web3js.readthedocs.io/en/1.0/index.html>`_), which is
-easier than messing around with the calldata directly.
+easier than messing around with the call data directly.
 
-The following examples all use web3.js version 1.0.0-beta.
+.. note::
+    The following examples all use web3.js version 1.0.0-beta.
 
 You can see the raw data that would get sent to your contract without even
-deploying it. Web3.js will calculate it for you from the ABI you provide and
-the input arguments. ::
+deploying it. Web3.js will calculate it for you from the provided ABI and input
+arguments. ::
 
   > var Web3 = require('web3');
   undefined
@@ -413,19 +421,19 @@ it is invoked on the blockchain.
     ``0x1099ee88`` which we see at the beginning as the function selector.
 
   * Then we see the ``uint256`` quantity ``0x20``, which is the start of the
-    string in the call data.
+    string in the call data (ignoring the function selector).
 
   * Next is the ``uint256`` value ``3``, the length of the string.
 
-  * Finally the three left-justified ASCII values ``0x61``, ``0x62``,`` 0x63``,
+  * Finally the three left-justified ASCII values ``0x61``, ``0x62``, ``0x63``,
     which are just the string "abc".
 
 
 Worked example
 --------------
 
-The following code simply returns its input data (excluding the function
-selector) as a bytes32[] array. ::
+The following LLL code simply returns its input data (excluding the function
+selector) as an ABI compliant ``bytes32[]`` array. ::
 
   (returnlll
     (seq
