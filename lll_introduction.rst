@@ -91,6 +91,9 @@ Example Code
  * There is also a sample `ENS Resolver in LLL
    <https://github.com/ethereum/ens/blob/master/contracts/PublicResolver.lll>`_.
 
+ * An ERC20 token `implementation in LLL
+   <https://github.com/benjaminion/LLL_erc20>`_.
+   
  * The compiler `built-in macros
    <https://github.com/ethereum/solidity/blob/develop/liblll/CompilerState.cpp>`_
    and `end-to-end test suite
