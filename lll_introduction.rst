@@ -14,7 +14,10 @@ LLL Introduction
 
 
 Background
-========== 
+==========
+
+.. image:: lispLikeLanguageLogo.png
+   :width: 1024
 
 LLL is one of the original Ethereum smart contract programming languages and
 provides a different perspective and programming discipline when compared to
